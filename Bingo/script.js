@@ -3,11 +3,15 @@
 let numeros = [];
 let botao = document.getElementsByTagName("button")[0];
 let botaop = document.getElementsByTagName("button")[1];
+let botaoOrg = document.getElementsByTagName("button")[2]
+let p = document.getElementsByTagName("p")[0];
+let p1 = document.getElementsByTagName("p")[1];
 let intervalo;
 let corpo = document.getElementsByTagName("body")[0];
 let index = 0;
 let teste = 1;
 
+botaoOrg.onclick = organizar;
 botao.onclick = bingo;
 botaop.onclick = pararpb;
 corpo.onload = gerarArr;
@@ -19,31 +23,50 @@ function gerarArr() {
     let na = Math.ceil(Math.random() * 90);
     if (numeros.indexOf(na) === -1) {
       numeros.push(na);
-      console.log(na);
     } else {
       i--;
     }
   }
-  /*numeros.sort(function (a, b) {
-    return a - b;
-  });
-  console.log(numeros);*/
+  numOrg = [...numeros]
+
 }
 
 //Faz com que os números sejam escritos
 //Informa se o timer está rodando ou não
 
 function bingo() {
-  let p = document.getElementsByTagName("p")[0];
+  
   if (teste == 1) {
     teste = 0;
-    intervalo = setInterval(escreveNumeros, 3000);
+    intervalo = setInterval(escreveNumeros, 1000);
     function escreveNumeros() {
       p.innerHTML += numeros[index] + " / ";
       ++index;
       parar();
     }
   }
+}
+
+
+// filtrar os numeros e mostrar apenas os já sorteados  
+function filtragem(numero) {
+  return numOrg.indexOf(numero) <=  index - 1 
+
+}
+
+
+function organizar(){
+
+  let numerosFiltrados = numOrg.filter(filtragem)
+  let arrayOrg = numerosFiltrados.sort()
+
+  for (let numero of arrayOrg){
+    p1.innerHTML += numero + " / "
+  }
+
+
+  pararpb()
+
 }
 
 function parar() {
@@ -57,3 +80,5 @@ function pararpb() {
   clearInterval(intervalo);
   teste = 1;
 }
+
+
