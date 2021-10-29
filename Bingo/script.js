@@ -1,15 +1,17 @@
+//Para abrir no celular da tereira idade
 // GERADOR DE NÚMEROS PARA BINGO!!!!!
 
 let numeros = [];
 let botao = document.getElementsByTagName("button")[0];
 let botaop = document.getElementsByTagName("button")[1];
-let botaoOrg = document.getElementsByTagName("button")[2]
+let botaoOrg = document.getElementsByTagName("button")[2];
 let p = document.getElementsByTagName("p")[0];
 let p1 = document.getElementsByTagName("p")[1];
 let intervalo;
 let corpo = document.getElementsByTagName("body")[0];
 let index = 0;
 let teste = 1;
+let testeOrg = 0;
 
 botaoOrg.onclick = organizar;
 botao.onclick = bingo;
@@ -27,15 +29,13 @@ function gerarArr() {
       i--;
     }
   }
-  numOrg = [...numeros]
-
+  numOrg = [...numeros];
 }
 
 //Faz com que os números sejam escritos
 //Informa se o timer está rodando ou não
 
 function bingo() {
-  
   if (teste == 1) {
     teste = 0;
     intervalo = setInterval(escreveNumeros, 1000);
@@ -47,26 +47,27 @@ function bingo() {
   }
 }
 
-
-// filtrar os numeros e mostrar apenas os já sorteados  
+// filtrar os numeros e mostrar apenas os já sorteados
 function filtragem(numero) {
-  return numOrg.indexOf(numero) <=  index - 1 
-
+  return numOrg.indexOf(numero) <= index - 1;
 }
 
+function organizar() {
+  let numerosFiltrados = numOrg.filter(filtragem);
+  let arrayOrg = numerosFiltrados.sort(compararNumeros);
+  escreveOrg(arrayOrg);
+  pararpb();
+}
 
-function organizar(){
-
-  let numerosFiltrados = numOrg.filter(filtragem)
-  console.log(numerosFiltrados)
-  let arrayOrg = numerosFiltrados.sort(compararNumeros)
-  console.log(arrayOrg)
-
-  for (let numero of arrayOrg){
-    p1.innerHTML += numero + "  "
+function escreveOrg(arrayOrg) {
+  if (p1.textContent == '') {
+    for (let numero of arrayOrg) {
+      p1.innerHTML += numero + "  ";
+    }
+  } else {
+    p1.innerHTML = "";
+    escreveOrg(arrayOrg)
   }
-  pararpb()
-
 }
 
 function parar() {
@@ -82,6 +83,5 @@ function pararpb() {
 }
 
 function compararNumeros(a, b) {
-  return a - b
+  return a - b;
 }
-
