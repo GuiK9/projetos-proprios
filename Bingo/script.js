@@ -40,7 +40,7 @@ function bingo() {
     teste = 0;
     intervalo = setInterval(escreveNumeros, 1000);
     function escreveNumeros() {
-      p.innerHTML += numeros[index] + " / ";
+      p.innerHTML += numeros[index] + " ";
       ++index;
       parar();
     }
@@ -58,13 +58,13 @@ function filtragem(numero) {
 function organizar(){
 
   let numerosFiltrados = numOrg.filter(filtragem)
-  let arrayOrg = numerosFiltrados.sort()
+  console.log(numerosFiltrados)
+  let arrayOrg = numerosFiltrados.sort(compararNumeros)
+  console.log(arrayOrg)
 
   for (let numero of arrayOrg){
-    p1.innerHTML += numero + " / "
+    p1.innerHTML += numero + "  "
   }
-
-
   pararpb()
 
 }
@@ -81,4 +81,7 @@ function pararpb() {
   teste = 1;
 }
 
+function compararNumeros(a, b) {
+  return a - b
+}
 
