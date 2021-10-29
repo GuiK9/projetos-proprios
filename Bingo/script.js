@@ -11,7 +11,6 @@ let intervalo;
 let corpo = document.getElementsByTagName("body")[0];
 let index = 0;
 let teste = 1;
-let testeOrg = 0;
 
 botaoOrg.onclick = organizar;
 botao.onclick = bingo;
