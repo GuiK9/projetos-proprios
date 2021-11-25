@@ -10,41 +10,40 @@
 </head>
 
 <body>
-    <header>
-        <div id="timer">
+    <section>
+        <p>Seguinte, clicou em comecar, seu timer roda e vc deve ser o mais rápido em desvirar todas as cartas, achas que consegue? Boa sorte</p>
+    </section>
+
+    <section>
+        <div class="score">
+            <div class="timer">
+                <span id="hour">00</span>:<span id="minute">00</span>:<span id="second">00</span>:<span
+                    id="millisecond">000</span>
+            </div>
+            <div id="your-score" class="your-score">Seu ultimo tempo:  12:12:12</div>
+            <ul>
+                <li>1° lugar: 12:12:12 GUI</li>
+                <li>2° lugar: 12:12:12 GUI</li>
+                <li>3° lugar: 12:12:12 GUI</li>
+                <li>4° lugar: 12:12:12 GUI</li>
+                <li>5° lugar: 12:12:12 GUI</li>
+            </ul>
+
             <div>
-                <span id="hour">00</span>:<span id="minute">00</span>:<span id="second">00</span>:<span id="millisecond">000</span>
-              </div>
-            
-              <br/>
-            
-              <button id="startGameButton" class="button">comece</button>
-        </div>
-
-        <div id="yourScore"></div>
-
-        <div id="topDez"></div>
-        
-    </header>
-    <div id="gameBoard">
-       <!-- <div id="0987hjki" class="card" data-icon="bootstrap">
-            <div class="card_front">
-                <img src="assets/imagens/bootstrap.png" alt="bootstrap" class="icon">
+                <button id="restart" onclick="restart()" class="button">Jogue novamente</button>
             </div>
-            <div class="card_back">
-                &lt/&gt
-            </div>
-        </div> -->
-    </div>
-
-    <div id="gameOver">
-        <div>
-            parabéns, você completou o jogo!
         </div>
-        <button id="restart" onclick="restart()">Jogue novamente</button>
-    </div>
+        <div class="geral-board">
+            <button id="startGameButton" class="button">comece</button>
+            <div id="gameBoard">
+            </div>
+        </div>
+    </section>
 
-    
+
+
+
+
 
     <!--vou adicionar nesse game um sistema de rankeamento integrado com firestore
         
@@ -52,9 +51,10 @@
 
     -->
 
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script> -->
     <script src="assets/scripts/game.js"></script>
     <script src="assets/scripts/script.js"></script>
-    
+
 </body>
 
 </html>

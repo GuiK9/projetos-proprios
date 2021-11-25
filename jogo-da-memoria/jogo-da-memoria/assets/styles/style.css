@@ -4,40 +4,70 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Righteous, sans-serif;
 }
 
-body {
-    font-family: Righteous, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
+body{
     background-color: rgba(0, 0, 0, 0.192);
 }
 
-header{
-    position: absolute;
-    top: 0;
-    width: 100%;
-    padding: 20px 50px 0px 50px;
+section{
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 200px;
+    width: 70%;
+    height: max-content;
+}
+.geral-board{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 
 
-#startGameButton{
-    padding: 20px;
+.score{
+    font-size: 2em;
+}
+.timer{
+    margin-bottom: 20px;
+    display: inline-block;
+}
+.your-score{
+    position: relative;
+    width: max-content;
+}
+ul{
+    list-style-type: none;
+}
+
+li{
+    margin-top: 10px;
+}
+li:nth-child(5){
+    margin-bottom: 20px;
+    
+}
+
+.button{
     font-size: 20px;
+    width: 200px;
+    height: 50px;
+    border-radius: 10px;
     background-color: #05c3ff;
     border: none;
-    border-radius: 20px;
-    margin-top: 20px;
 }
+
+
 
 
 #gameBoard {
-    position: relative;
-    top: 20px;
     max-width: 700px;
     display: grid;
     grid-template: 1fr 1fr 1fr 1fr 1fr / 1fr 1fr 1fr 1fr;
@@ -47,8 +77,8 @@ header{
 
 
 .card {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.5s;
@@ -81,30 +111,28 @@ header{
     background-color: #05c3ff;
 }
 
-#gameOver {
-    display: flex;
-    color: white;
-    position: absolute;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.9);
-    font-size: 50px;
-    visibility: hidden;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.displayNone{
+    display: none;
 }
 
-#restart {
+/* #restart {
+    /* display: none; 
     padding: 20px;
     font-size: 20px;
     background-color: yellow;
     border: none;
     border-radius: 20px;
     margin-top: 20px;
-}
+} */
 
-.displayNone{
-    display: none;
-}
+
+
+
+/* #startGameButton{
+    padding: 20px;
+    font-size: 20px;
+    background-color: #05c3ff;
+    border: none;
+    border-radius: 20px;
+    margin-top: 20px;
+} */

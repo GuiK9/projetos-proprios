@@ -78,7 +78,7 @@ let game = {
         ];
     },
 
-    unflipCards: function() {
+    unflipCards: function () {
         this.firstCard.flipped = false
         this.secondCard.flipped = false
     },
@@ -100,7 +100,7 @@ let game = {
         }
     },
 
-    timerPlay: function() {
+    timerPlay: function () {
 
     },
 
@@ -117,45 +117,48 @@ let millisecond = 0;
 let cron;
 
 function start() {
-  stop();
-  cron = setInterval(() => { timer(); }, 10);
+    stop();
+    cron = setInterval(() => {
+        timer();
+    }, 10);
 }
 
 function stop() {
     game.score = [minute, second, millisecond]
-  clearInterval(cron);
+    clearInterval(cron);
 }
 
 function reset() {
-  hour = 0;
-  minute = 0;
-  second = 0;
-  millisecond = 0;
-  document.getElementById('hour').innerText = '00';
-  document.getElementById('minute').innerText = '00';
-  document.getElementById('second').innerText = '00';
-  document.getElementById('millisecond').innerText = '000';
+    stop()
+    hour = 0;
+    minute = 0;
+    second = 0;
+    millisecond = 0;
+    document.getElementById('hour').innerText = '00';
+    document.getElementById('minute').innerText = '00';
+    document.getElementById('second').innerText = '00';
+    document.getElementById('millisecond').innerText = '000';
 }
 
 function timer() {
-  if ((millisecond += 10) == 1000) {
-    millisecond = 0;
-    second++;
-  }
-  if (second == 60) {
-    second = 0;
-    minute++;
-  }
-  if (minute == 60) {
-    minute = 0;
-    hour++;
-  }
-  document.getElementById('hour').innerText = returnData(hour);
-  document.getElementById('minute').innerText = returnData(minute);
-  document.getElementById('second').innerText = returnData(second);
-  document.getElementById('millisecond').innerText = returnData(millisecond);
+    if ((millisecond += 10) == 1000) {
+        millisecond = 0;
+        second++;
+    }
+    if (second == 60) {
+        second = 0;
+        minute++;
+    }
+    if (minute == 60) {
+        minute = 0;
+        hour++;
+    }
+    document.getElementById('hour').innerText = returnData(hour);
+    document.getElementById('minute').innerText = returnData(minute);
+    document.getElementById('second').innerText = returnData(second);
+    document.getElementById('millisecond').innerText = returnData(millisecond);
 }
 
 function returnData(input) {
-  return input > 10 ? input : `0${input}`
+    return input > 10 ? input : `0${input}`
 }

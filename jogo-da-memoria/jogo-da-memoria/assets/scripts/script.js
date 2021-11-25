@@ -3,10 +3,30 @@ const BACK = "card_back";
 const CARD = "card"
 const ICON = "icon"
 
-const gameOverScreen = document.getElementById('gameOver')
+
 const gameBoard = document.getElementById("gameBoard")
 let flippedcards = 0
 let buttonStart = document.querySelector("#startGameButton")
+
+
+
+/* const firebaseConfig = {
+  apiKey: "AIzaSyBurgPo7Zgo-jalp3-wvY2Da4mTFrlWang",
+  authDomain: "jogo-da-memoria-96f04.firebaseapp.com",
+  projectId: "jogo-da-memoria-96f04",
+  storageBucket: "jogo-da-memoria-96f04.appspot.com",
+  messagingSenderId: "239983936845",
+  appId: "1:239983936845:web:4aad4eebc17be1abc3e304"
+};
+
+firebase.initializeApp(firebaseConfig); */
+
+
+
+
+
+
+
 
 buttonStart.addEventListener("click", startGame)
 
@@ -86,11 +106,8 @@ function testControl(control) {
 
 function iswin() {
     flippedcards++
+    stop()
     if(true/* flippedcards == 10 */){
-        stop()
-        setTimeout(() => {
-            gameOverScreen.style.visibility = "visible"
-        }, 1000)
     }
 }
 
@@ -98,7 +115,6 @@ function restart() {
     gameBoard.innerHTML = ''
     startGame()
     setScore()
-    gameOverScreen.style.visibility = "hidden"
 }
 
 function setScore(){
