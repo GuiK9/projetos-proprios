@@ -1,5 +1,6 @@
 let game = {
 
+    lockGame: false,
     lockMode: false,
     firstCard: null,
     secondCard: null,

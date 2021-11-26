@@ -10,17 +10,33 @@
 </head>
 
 <body>
+    <div class="pop-up-login">
+        <div>
+            <p>Crie uma conta para o sistema de rankeamento do game 😁</p>
+            <br>
+            <p>Confia! 😉</p>
+        </div>
+        <div>
+            <input type="text" placeholder="e-mail" class="input-login">
+            <input type="text" placeholder="Senha" class="input-login">
+        </div>
+        <div>
+            <input type="button" value="Criar" class="button" id="createAccount">
+        </div>
+    </div>
+    <main class="main-blur">
+
     <section>
         <p>Seguinte, clicou em comecar, seu timer roda e vc deve ser o mais rápido em desvirar todas as cartas, achas que consegue? Boa sorte</p>
     </section>
 
     <section>
-        <div class="score">
+        <div class="score" id="popUpLogin">
             <div class="timer">
                 <span id="hour">00</span>:<span id="minute">00</span>:<span id="second">00</span>:<span
                     id="millisecond">000</span>
             </div>
-            <div id="your-score" class="your-score">Seu ultimo tempo:  12:12:12</div>
+            <div id="yourScore" class="your-score">Seu ultimo tempo:  12:12:12</div>
             <ul>
                 <li>1° lugar: 12:12:12 GUI</li>
                 <li>2° lugar: 12:12:12 GUI</li>
@@ -39,21 +55,23 @@
             </div>
         </div>
     </section>
+</main>
 
 
 
 
 
 
-    <!--vou adicionar nesse game um sistema de rankeamento integrado com firestore
+
+        <!--vou adicionar nesse game um sistema de rankeamento integrado com firestore
         
         Quem passar pelo puzzle mais rápido sobe no ranking---
 
     -->
 
-    <!-- <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script> -->
-    <script src="assets/scripts/game.js"></script>
-    <script src="assets/scripts/script.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
+        <script src="assets/scripts/game.js"></script>
+        <script src="assets/scripts/script.js"></script>
 
 </body>
 
