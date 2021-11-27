@@ -4,27 +4,21 @@ const CARD = "card"
 const ICON = "icon"
 
 
-const gameBoard = document.getElementById("gameBoard")
 let flippedcards = 0
+const gameBoard = document.getElementById("gameBoard")
 const buttonStart = document.querySelector("#startGameButton")
-const creatAccount = document.getElementById("createAccount")
+const createAccount = document.getElementById("createAccount")
 const popUpLogin = document.querySelector('#popUpLogin')
+const main = document.getElementsByTagName('main')[0]
+const inputMail = document.querySelectorAll('.input-login')[0]
+const inputSenha = document.querySelectorAll('.input-login')[1]
 
-creatAccount.addEventListener("click", accountCreated)
+createAccount.addEventListener("click", accountCreated)
 buttonStart.addEventListener("click", startGame)
-
-function accountCreated() {
-    unlockGame()
-    logged()
-}
+window.addEventListener('load', unLogged)
 
 function unlockGame() {
     game.lockGame = true
-}
-
-function logged() {
-    console.log("sinm")
-    popUpLogin.style.color = "red"
 }
 
 function startGame() {
@@ -129,7 +123,6 @@ function mountScore() {
 
 
 
-
 const firebaseConfig = {
     apiKey: "AIzaSyBurgPo7Zgo-jalp3-wvY2Da4mTFrlWang",
     authDomain: "jogo-da-memoria-96f04.firebaseapp.com",
@@ -143,36 +136,54 @@ const db = firebase.firestore()
 const auth = firebase.auth()
 
 
-function logIn(email, password) {
-    auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Signed in
-            var user = userCredential.user;
-            // ...
-        })
-        .catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ..
-        });
+
+
+function accountCreated() {
+    logIn(inputMail.value, inputSenha.value)
 }
 
-
-
-/* let db = firebase.firestore()
-let auth = firebase.auth()
-
-var email = "thigas@gmail.com"
-var password = "122212122"
-
-firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-        // Signed in
-        var user = userCredential.user;
-        // ...
+function logIn(email, password) {
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                console.log(userCredential)
+                console.log('usuário logado')
+                unlockGame()
+                logged()
+            })
+            .catch((error) => {
+                console.log(error.message)
+                alert(error.message)
+            }).catch(err => {
+                console.log(err.message)
+            })
     })
-    .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ..
-    }); */
+}
+
+function logged() {
+    if (auth.currentUser != null) {
+        unlockGame()
+        popUpLogin.classList = "displayNone"
+        main.classList = 'withoutBlur'
+    }
+}
+
+function unLogged() {
+    setTimeout(() => {
+        if (auth.currentUser == null) {
+            console.log(auth.currentUser)
+            popUpLogin.classList = "pop-up-login"
+            main.classList = 'main-blur'
+        }
+    }, 1000)
+}
+
+function logOut() {
+    auth.signOut().then(() => {
+        console.log("usuário foi deslogado")
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+// ao invés de tirar a tela de logado se estiver logado, colocar a tela se não estiver 

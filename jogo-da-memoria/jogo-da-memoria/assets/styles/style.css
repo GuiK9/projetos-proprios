@@ -15,7 +15,7 @@ body{
 .main-blur{
     height: 100%;
     background-color: rgba(0, 0, 0, 0.356);
-     filter: blur(1px); 
+    filter: blur(1px); 
 }
 
 section{
@@ -121,9 +121,7 @@ li:nth-child(5){
     background-color: #05c3ff;
 }
 
-.displayNone{
-    display: none;
-}
+
 
 
 .pop-up-login{
@@ -146,6 +144,7 @@ li:nth-child(5){
 }
 
 .input-login{
+    font-size: large;
     padding: 12px;
     margin-top: 20px;
     border: solid black 1px;
@@ -155,3 +154,11 @@ li:nth-child(5){
 }
 
 
+.displayNone{
+    display: none;
+}
+
+.withoutBlur{
+   background-color: rgb(207, 207, 207);
+    filter: blur(0px); 
+}
