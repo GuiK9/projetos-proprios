@@ -15,7 +15,7 @@ const inputSenha = document.querySelectorAll('.input-login')[1]
 
 createAccount.addEventListener("click", accountCreated)
 buttonStart.addEventListener("click", startGame)
-window.addEventListener('load', unLogged)
+
 
 function unlockGame() {
     game.lockGame = true
@@ -136,7 +136,13 @@ const db = firebase.firestore()
 const auth = firebase.auth()
 
 
-
+setTimeout(() => {
+    if (auth.currentUser == null) {
+        console.log(auth.currentUser)
+        popUpLogin.classList = "pop-up-login"
+        main.classList = 'main-blur'
+    }
+}, 2000)
 
 function accountCreated() {
     logIn(inputMail.value, inputSenha.value)
@@ -166,16 +172,6 @@ function logged() {
         popUpLogin.classList = "displayNone"
         main.classList = 'withoutBlur'
     }
-}
-
-function unLogged() {
-    setTimeout(() => {
-        if (auth.currentUser == null) {
-            console.log(auth.currentUser)
-            popUpLogin.classList = "pop-up-login"
-            main.classList = 'main-blur'
-        }
-    }, 1000)
 }
 
 function logOut() {
