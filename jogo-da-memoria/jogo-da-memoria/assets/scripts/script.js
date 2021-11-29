@@ -10,8 +10,10 @@ const buttonStart = document.querySelector("#startGameButton")
 const createAccount = document.getElementById("createAccount")
 const popUpLogin = document.querySelector('#popUpLogin')
 const main = document.getElementsByTagName('main')[0]
-const inputMail = document.querySelectorAll('.input-login')[0]
-const inputSenha = document.querySelectorAll('.input-login')[1]
+const inputNickname = document.querySelectorAll('.input-login')[0]
+const inputMail = document.querySelectorAll('.input-login')[1]
+const inputSenha = document.querySelectorAll('.input-login')[2]
+const lastTimeTag = document.getElementById("yourLastScore")
 
 createAccount.addEventListener("click", accountCreated)
 buttonStart.addEventListener("click", startGame)
@@ -112,15 +114,21 @@ function restart() {
 }
 
 function setScore() {
-    let scoreMounted = mountScore()
-    document.getElementById("yourScore").innerHTML = `Seu ultimo tempo: ${scoreMounted}`
+    let scoreMounted = mountScore(game.score)
+    document.getElementById("yourLastScore").innerHTML = `Seu ultimo tempo: ${scoreMounted}`
 }
 
-function mountScore() {
-    let stringScoreMounted = `${game.score[0]}:${game.score[1]}:${game.score[2]}`
+function mountScore(score) {
+    let stringScoreMounted = `${score[0]}:${score[1]}:${score[2]}`
     return stringScoreMounted
 }
 
+function NewLastScore() {
+    let lastScore = [...game.score]
+    mountScore()
+    lastTimeTag.innerHTML = `Seu último tempo:`
+
+}
 
 
 const firebaseConfig = {
@@ -132,9 +140,9 @@ const firebaseConfig = {
     appId: "1:239983936845:web:4aad4eebc17be1abc3e304"
 }
 firebase.initializeApp(firebaseConfig)
-const db = firebase.firestore()
 const auth = firebase.auth()
 
+// Here everything related to authentication
 
 setTimeout(() => {
     if (auth.currentUser == null) {
@@ -182,4 +190,19 @@ function logOut() {
     })
 }
 
-// ao invés de tirar a tela de logado se estiver logado, colocar a tela se não estiver 
+
+//here everthing related to batabase
+const db = firebase.firestore()
+
+function updateTimePlayer(){
+    db.collection("players").add({
+        nick: inputNickname.value,
+        score: game.score
+    }).then(() => {
+        console.log('o documento foi inserido com sucesso')
+    }).catch((err) => {
+      console.log(err)  
+    })
+}
+
+
