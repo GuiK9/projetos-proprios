@@ -103,7 +103,9 @@ function iswin() {
     flippedcards++
     if (true /* flippedcards == 10 */ ) {
         stop()
+        reset()
         setScore()
+        updateTimePlayer()
     }
 }
 
@@ -141,12 +143,13 @@ const firebaseConfig = {
 }
 firebase.initializeApp(firebaseConfig)
 const auth = firebase.auth()
+let currentUid
 
 // Here everything related to authentication
 
 setTimeout(() => {
+    currentUid = auth.getUid()
     if (auth.currentUser == null) {
-        console.log(auth.currentUser)
         popUpLogin.classList = "pop-up-login"
         main.classList = 'main-blur'
     }
@@ -164,6 +167,7 @@ function logIn(email, password) {
                 console.log('usuário logado')
                 unlockGame()
                 logged()
+                currentUid = auth.getUid()
             })
             .catch((error) => {
                 console.log(error.message)
@@ -193,16 +197,35 @@ function logOut() {
 
 //here everthing related to batabase
 const db = firebase.firestore()
+let docId
+setTimeout(() => {
+    db.collection("players").where("Uid", "==", currentUid).get().then(
+        (snapshot) => {
+            snapshot.forEach((doc) => {
+                docId = doc.id
+            })
+        })
+}, 3000)
 
-function updateTimePlayer(){
-    db.collection("players").add({
-        nick: inputNickname.value,
-        score: game.score
-    }).then(() => {
-        console.log('o documento foi inserido com sucesso')
-    }).catch((err) => {
-      console.log(err)  
-    })
+
+function updateTimePlayer() {
+    if (docId === undefined) {
+        db.collection("players").add({
+            Uid: currentUid,
+            nick: inputNickname.value,
+            score: game.score
+        }).then(() => {
+            console.log('o documento foi inserido com sucesso')
+        }).catch((err) => {
+            console.log(err)
+        })
+    } else {
+        db.collection("players").doc(docId).set({
+            score: game.score
+        }).then(() => {
+            console.log('o documento foi setado com sucesso')
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
 }
-
-
