@@ -48,8 +48,6 @@ function startGame() {
 }
 
 function initializeCards() {
-
-
     game.cards.forEach(card => {
         let cardElement = document.createElement('div')
         cardElement.id = card.id
@@ -60,7 +58,6 @@ function initializeCards() {
         cardElement.addEventListener('click', flipCard)
         gameBoard.appendChild(cardElement)
     })
-
 }
 
 function createCardContent(card, cardElement) {
@@ -145,11 +142,10 @@ function NewLastScore() {
     let lastScore = [...game.score]
     mountScore()
     lastTimeTag.innerHTML = `Seu último tempo:`
-
 }
 
 
-// Here everything related to authentication
+// Here everything related to authenticationzz
 
 setTimeout(() => {
     currentUid = auth.getUid()
@@ -242,14 +238,94 @@ function updateTimePlayer() {
 }
 
 //pegando dados
-let allScore = []
+let allObjScore = []
 
 db.collection("players").get().then(snapshot => {
-    snapshot.forEach((doc)=>{
-        
+    snapshot.forEach((doc) => {
         let json = `{"nick": "${doc.data().nick}", "score": "${doc.data().score}"}`
         let obj = JSON.parse(json)
-        obj.score = obj.score.split(',', '3')
-        allScore.push(obj)
+        allObjScore.push(obj)
     })
+    scoreSeparate()
 })
+
+
+let arrayScore = []
+function scoreSeparate() {
+    for (let i = 0; i < allObjScore.length; i++) {
+        arrayScore.push(allObjScore[i].score.split(',', '3'))
+    }
+    firstFive(arrayScore)
+}
+
+function firstFive(arrayScore) {
+    let firstPlace = isFirstPlace(arrayScore)[0]
+    let secondPlace = outerPlaces(firstPlace)
+    console.log(firstPlace, ' first place')
+    console.log(secondPlace, ' second place')
+}
+
+function outerPlaces(lastPlace) {
+    let outerPlace = []
+    for (let i = 1; i < arrayScore.length; i++) {
+        let score = arrayScore[i]
+        if (score[0] && lastPlace[0] == 0) {
+            if (score[1] < lastPlace[1]) {
+                if (score[2] < lastPlace[2]) {
+                    firstPlace.push(score)
+                }
+            } else {
+                outerPlace.push(lastPlace)
+            }
+        } else {
+            if (score[0] < lastPlace[0]) {
+                if (score[1] < lastPlace[1]) {
+                    if (score[2] < lastPlace[2]) {
+                        outerPlace.push(score)
+                    } else{
+                        outerPlace.push(lastPlace)
+                    }
+                } else {
+                    outerPlace.push(lastPlace)
+                }
+            } else {
+                outerPlace.push(lastPlace)
+            }
+        }
+    }
+    return outerPlace[0]
+}
+
+function isFirstPlace(allScore){
+    let firstPlace = []
+    for (let i = 1; i < allScore.length; i++) {
+        let score = allScore[i]
+        if (score[0] && allScore[i - 1][0] == 0) {
+            if (score[1] < allScore[i - 1][1]) {
+                if (score[2] < allScore[i - 1][2]) {
+                    firstPlace.push(score)
+                }
+            } else {
+                firstPlace.push(allScore[i - 1])
+            }
+        } else {
+            if (score[0] < allScore[i - 1][0]) {
+                if (score[1] < allScore[i - 1][1]) {
+                    if (score[2] < allScore[i - 1][2]) {
+                        firstPlace.push(score)
+                    } else{
+                        firstPlace.push(allScore[i - 1])
+                    }
+                } else {
+                    firstPlace.push(allScore[i - 1])
+                }
+            } else {
+                firstPlace.push(allScore[i - 1])
+            }
+        }
+    }
+    return firstPlace
+}
+
+
+//Toda vez que inserido ou setado um novo tempo que o arquivo o sete já com a colocação 
