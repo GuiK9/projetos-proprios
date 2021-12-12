@@ -251,81 +251,75 @@ db.collection("players").get().then(snapshot => {
 
 
 let arrayScore = []
+
 function scoreSeparate() {
     for (let i = 0; i < allObjScore.length; i++) {
         arrayScore.push(allObjScore[i].score.split(',', '3'))
     }
-    firstFive(arrayScore)
+    firstFive()
 }
 
-function firstFive(arrayScore) {
-    let firstPlace = isFirstPlace(arrayScore)[0]
-    let secondPlace = outerPlaces(firstPlace)
-    console.log(firstPlace, ' first place')
-    console.log(secondPlace, ' second place')
-}
 
-function outerPlaces(lastPlace) {
-    let outerPlace = []
-    for (let i = 1; i < arrayScore.length; i++) {
-        let score = arrayScore[i]
-        if (score[0] && lastPlace[0] == 0) {
-            if (score[1] < lastPlace[1]) {
-                if (score[2] < lastPlace[2]) {
-                    firstPlace.push(score)
-                }
-            } else {
-                outerPlace.push(lastPlace)
-            }
-        } else {
-            if (score[0] < lastPlace[0]) {
-                if (score[1] < lastPlace[1]) {
-                    if (score[2] < lastPlace[2]) {
-                        outerPlace.push(score)
-                    } else{
-                        outerPlace.push(lastPlace)
+let scoreFistFive = []
+
+function firstFive() {
+
+    let arrayScoreTemp = [...arrayScore]
+    let score = arrayScoreTemp[0]
+
+    for (let i = 0; i < arrayScoreTemp.length; i++) {
+
+        let menor = smallestTime(score, arrayScoreTemp)
+        console.log(menor)
+    }
+} //esse é um for que vai executar e re-organizar o array toda vez que pegar o menor número
+
+function smallestTime(score, arrayScoreTemp) {
+
+    let menorScore
+
+    for (let i = 0; i < arrayScoreTemp.length; i++) {
+
+        let outerScore = arrayScoreTemp[i]
+
+            if (score[0] == 0 && outerScore[0] == 0) {
+
+                if (score[1] <= outerScore[1]) {
+
+                    if (score[2] < outerScore[2]) {
+
+                        menorScore = score
+                    } else {
+                        menorScore = outerScore
                     }
                 } else {
-                    outerPlace.push(lastPlace)
+                    menorScore = outerScore
                 }
             } else {
-                outerPlace.push(lastPlace)
-            }
-        }
-    }
-    return outerPlace[0]
-}
+                if (score[0] <= outerScore[0]) {
 
-function isFirstPlace(allScore){
-    let firstPlace = []
-    for (let i = 1; i < allScore.length; i++) {
-        let score = allScore[i]
-        if (score[0] && allScore[i - 1][0] == 0) {
-            if (score[1] < allScore[i - 1][1]) {
-                if (score[2] < allScore[i - 1][2]) {
-                    firstPlace.push(score)
-                }
-            } else {
-                firstPlace.push(allScore[i - 1])
-            }
-        } else {
-            if (score[0] < allScore[i - 1][0]) {
-                if (score[1] < allScore[i - 1][1]) {
-                    if (score[2] < allScore[i - 1][2]) {
-                        firstPlace.push(score)
-                    } else{
-                        firstPlace.push(allScore[i - 1])
+                    if (score[1] <= outerScore[1]) {
+
+                        if (score[2] < outerScore[2]) {
+
+                            menorScore = score
+                        } else {
+
+                            menorScore = outerScore
+                        }
+                    } else {
+
+                        menorScore = outerScore
                     }
                 } else {
-                    firstPlace.push(allScore[i - 1])
+
+                    menorScore = outerScore
                 }
-            } else {
-                firstPlace.push(allScore[i - 1])
             }
-        }
+
+        // essa é uma função que vai pegar o enor tempo do array
     }
-    return firstPlace
+
+    return menorScore
+
 }
-
-
-//Toda vez que inserido ou setado um novo tempo que o arquivo o sete já com a colocação 
