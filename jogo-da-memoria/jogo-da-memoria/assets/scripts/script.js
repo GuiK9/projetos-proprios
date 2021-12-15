@@ -8,6 +8,8 @@ const firebaseConfig = {
 }
 firebase.initializeApp(firebaseConfig)
 let currentUid
+let bestTime
+
 let flippedcards = 0
 
 const auth = firebase.auth()
@@ -115,13 +117,27 @@ function testControl(control) {
     }
 }
 
+
+
 function iswin() {
     flippedcards++
     if (true /* flippedcards == 10 */ ) {
         stop()
         reset()
         setScore()
-        updateTimePlayer()
+        if (bestTime != undefined){
+            if(game.score < bestTime){
+                bestTime = game.score
+                updateTimePlayer(bestTime)
+                
+            } else{
+                updateTimePlayer(bestTime)
+            }
+        } else {
+            bestTime = game.score
+            updateTimePlayer(bestTime)
+
+        }
     }
 }
 
@@ -141,10 +157,11 @@ function NewLastScore() {
 }
 
 
-// Here everything related to authenticationzz
+// Here everything related to authentication
 
 setTimeout(() => {
     currentUid = auth.getUid()
+
 }, 2000)
 
 setTimeout(() => {
@@ -162,7 +179,6 @@ function logIn(email, password) {
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
         auth.createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
-                console.log(userCredential)
                 console.log('usuário logado')
                 unlockGame()
                 logged()
@@ -182,6 +198,8 @@ function logged() {
         unlockGame()
         popUpLogin.classList = "displayNone"
         main.classList = 'withoutBlur'
+
+        console.log(auth.getUid())
     }
 }
 
@@ -206,27 +224,28 @@ function firstTime() {
         (snapshot) => {
             snapshot.forEach((doc) => {
                 docId = doc.id
+                bestTime = doc.data().score
             })
         })
 }
 
 
-function updateTimePlayer() {
+function updateTimePlayer(bestTime) {
     if (docId === undefined) {
         db.collection("players").add({
             Uid: currentUid,
             nick: inputNickname.value,
-            score: game.score
+            score: bestTime
         }).then(() => {
-            console.log('o documento foi inserido com sucesso')
+            console.log('o documento foi inserido com sucesso' + bestTime)
         }).catch((err) => {
             console.log(err)
         })
     } else {
         db.collection("players").doc(docId).update({
-            score: game.score
+            score: bestTime
         }).then(() => {
-            console.log('o documento foi setado com sucesso')
+            console.log('o documento foi setado com sucesso' + bestTime)
         }).catch((err) => {
             console.log(err)
         })
@@ -264,7 +283,7 @@ function firstFive() {
 
     allFirstFiveObj = allObjScore.filter((obj) => {
         for (let i = 0; i < firstFive.length; i++) {
-            if (obj.score == firstFive[i]){
+            if (obj.score == firstFive[i]) {
                 return true
             }
         }
@@ -275,12 +294,12 @@ function firstFive() {
     setFirstFive(objScoreSorted)
 }
 
-function sortFirstFiveObj(FirstFiveObj, firstFiveSorted){
+function sortFirstFiveObj(FirstFiveObj, firstFiveSorted) {
     let ObjTopFive = []
 
     firstFiveSorted.forEach((e) => {
         for (let i = 0; i < FirstFiveObj.length; i++) {
-            if(e == FirstFiveObj[i].score){
+            if (e == FirstFiveObj[i].score) {
                 ObjTopFive.push(FirstFiveObj[i])
             }
         }
@@ -288,16 +307,16 @@ function sortFirstFiveObj(FirstFiveObj, firstFiveSorted){
     return ObjTopFive
 }
 
-function setFirstFive(scoreObj){
-    ListFirstFive.innerHTML = `
-    <li>1°: ${scoreObj[0].score} sec  ${scoreObj[0].nick}</li>
-    <li>2°: ${scoreObj[1].score} sec  ${scoreObj[1].nick}</li>
-    <li>3°: ${scoreObj[2].score} sec  ${scoreObj[2].nick}</li>
-    <li>4°: ${scoreObj[3].score} sec  ${scoreObj[3].nick}</li>
-    <li>5°: ${scoreObj[4].score} sec  ${scoreObj[4].nick}</li>
-    `
-}
+function setFirstFive(scoreObj) {
 
+    for (let i = 0; i < scoreObj.length; i++) {
+        let liElement = document.createElement("li")
+        liElement.innerHTML = `${i + 1}°: ${scoreObj[i].score} sec  ${scoreObj[i].nick}`
+        ListFirstFive.appendChild(liElement)
+
+    }
+
+}
 
 
 //no momento de star o documento preciso atualizar apenas se o tempo da pessoa foi melhor do que o ultimo jogado, salva tudo e testa depois, agora convertido fica tudo mais simples
