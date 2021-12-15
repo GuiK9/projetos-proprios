@@ -125,17 +125,20 @@ function start() {
 }
 
 function stop() {
-    game.score = [minute, second, millisecond]
+    game.score = convertTosecond(minute, second, millisecond)
     clearInterval(cron);
+}
+
+function convertTosecond(minute, second, millisecond) {
+    let seconds = minute * 60 + second + (millisecond / 1000)
+    return seconds
 }
 
 function reset() {
     stop()
-    hour = 0;
     minute = 0;
     second = 0;
     millisecond = 0;
-    document.getElementById('hour').innerText = '00';
     document.getElementById('minute').innerText = '00';
     document.getElementById('second').innerText = '00';
     document.getElementById('millisecond').innerText = '000';
@@ -150,11 +153,6 @@ function timer() {
         second = 0;
         minute++;
     }
-    if (minute == 60) {
-        minute = 0;
-        hour++;
-    }
-    document.getElementById('hour').innerText = returnData(hour);
     document.getElementById('minute').innerText = returnData(minute);
     document.getElementById('second').innerText = returnData(second);
     document.getElementById('millisecond').innerText = returnData(millisecond);

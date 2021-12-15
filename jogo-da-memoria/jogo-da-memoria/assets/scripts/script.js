@@ -27,6 +27,9 @@ const inputNickname = document.querySelectorAll('.input-login')[0]
 const inputMail = document.querySelectorAll('.input-login')[1]
 const inputSenha = document.querySelectorAll('.input-login')[2]
 const lastTimeTag = document.getElementById("yourLastScore")
+const ListFirstFive = document.getElementById("ListFirstFive")
+
+
 
 
 
@@ -129,18 +132,11 @@ function restart() {
 }
 
 function setScore() {
-    let scoreMounted = mountScore(game.score)
-    document.getElementById("yourLastScore").innerHTML = `Seu ultimo tempo: ${scoreMounted}`
-}
-
-function mountScore(score) {
-    let stringScoreMounted = `${score[0]}:${score[1]}:${score[2]}`
-    return stringScoreMounted
+    document.getElementById("yourLastScore").innerHTML = `Seu ultimo tempo: ${game.score} sec`
 }
 
 function NewLastScore() {
     let lastScore = [...game.score]
-    mountScore()
     lastTimeTag.innerHTML = `Seu último tempo:`
 }
 
@@ -240,86 +236,68 @@ function updateTimePlayer() {
 //pegando dados
 let allObjScore = []
 
+
 db.collection("players").get().then(snapshot => {
     snapshot.forEach((doc) => {
         let json = `{"nick": "${doc.data().nick}", "score": "${doc.data().score}"}`
         let obj = JSON.parse(json)
         allObjScore.push(obj)
     })
-    scoreSeparate()
+    firstFive()
 })
 
-
-let arrayScore = []
-
-function scoreSeparate() {
-    for (let i = 0; i < allObjScore.length; i++) {
-        arrayScore.push(allObjScore[i].score.split(',', '3'))
-    }
-    firstFive()
-}
-
-
-let scoreFistFive = []
-
 function firstFive() {
+    let firstFive = []
+    let allScore = []
+    let allNick = []
+    allObjScore.forEach(dbScore => {
+        allScore.push(Number(dbScore.score))
+        allNick.push(dbScore.nick)
+    })
+    allScore.sort((a, b) => {
+        return a - b
+    })
 
-    let arrayScoreTemp = [...arrayScore]
-    let score = arrayScoreTemp[0]
+    firstFive = allScore.slice(0, 5)
 
-    for (let i = 0; i < arrayScoreTemp.length; i++) {
+    let allFirstFiveObj = []
 
-        let menor = smallestTime(score, arrayScoreTemp)
-        console.log(menor)
-    }
-} //esse é um for que vai executar e re-organizar o array toda vez que pegar o menor número
-
-function smallestTime(score, arrayScoreTemp) {
-
-    let menorScore
-
-    for (let i = 0; i < arrayScoreTemp.length; i++) {
-
-        let outerScore = arrayScoreTemp[i]
-
-            if (score[0] == 0 && outerScore[0] == 0) {
-
-                if (score[1] <= outerScore[1]) {
-
-                    if (score[2] < outerScore[2]) {
-
-                        menorScore = score
-                    } else {
-                        menorScore = outerScore
-                    }
-                } else {
-                    menorScore = outerScore
-                }
-            } else {
-                if (score[0] <= outerScore[0]) {
-
-                    if (score[1] <= outerScore[1]) {
-
-                        if (score[2] < outerScore[2]) {
-
-                            menorScore = score
-                        } else {
-
-                            menorScore = outerScore
-                        }
-                    } else {
-
-                        menorScore = outerScore
-                    }
-                } else {
-
-                    menorScore = outerScore
-                }
+    allFirstFiveObj = allObjScore.filter((obj) => {
+        for (let i = 0; i < firstFive.length; i++) {
+            if (obj.score == firstFive[i]){
+                return true
             }
+        }
+    })
 
-        // essa é uma função que vai pegar o enor tempo do array
-    }
+    let objScoreSorted = sortFirstFiveObj(allFirstFiveObj, firstFive)
 
-    return menorScore
-
+    setFirstFive(objScoreSorted)
 }
+
+function sortFirstFiveObj(FirstFiveObj, firstFiveSorted){
+    let ObjTopFive = []
+
+    firstFiveSorted.forEach((e) => {
+        for (let i = 0; i < FirstFiveObj.length; i++) {
+            if(e == FirstFiveObj[i].score){
+                ObjTopFive.push(FirstFiveObj[i])
+            }
+        }
+    })
+    return ObjTopFive
+}
+
+function setFirstFive(scoreObj){
+    ListFirstFive.innerHTML = `
+    <li>1°: ${scoreObj[0].score} sec  ${scoreObj[0].nick}</li>
+    <li>2°: ${scoreObj[1].score} sec  ${scoreObj[1].nick}</li>
+    <li>3°: ${scoreObj[2].score} sec  ${scoreObj[2].nick}</li>
+    <li>4°: ${scoreObj[3].score} sec  ${scoreObj[3].nick}</li>
+    <li>5°: ${scoreObj[4].score} sec  ${scoreObj[4].nick}</li>
+    `
+}
+
+
+
+//no momento de star o documento preciso atualizar apenas se o tempo da pessoa foi melhor do que o ultimo jogado, salva tudo e testa depois, agora convertido fica tudo mais simples
