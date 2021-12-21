@@ -121,7 +121,7 @@ function testControl(control) {
 
 function iswin() {
     flippedcards++
-    if (true /* flippedcards == 10 */ ) {
+    if (flippedcards == 10) {
         stop()
         reset()
         setScore()
