@@ -1,0 +1,16 @@
+{
+  "name": "api-_crud-mongodb_node.js",
+  "version": "1.0.0",
+  "description": "REST API, with simple CRUD functions",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "GuiK9",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mongoose": "^6.2.1"
+  }
+}
