@@ -1,6 +1,6 @@
 const express = require("express")
 const dotenv = require("dotenv")
-const gradeSchema = require("./mongoModel/gradeSchema.js")
+const newStudent = require("./mongoModel/newStudent.js")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 
@@ -8,7 +8,7 @@ const bodyParser = require("body-parser")
 const app = express()
 dotenv.config()
 
-mongoose.connect("mongodb://localhost:27017/turma1").then(() => {
+mongoose.connect("mongodb://localhost:27017/school").then(() => {
     console.log("DB connected")
 }).catch(err => console.log(err))
 
@@ -16,10 +16,9 @@ mongoose.connect("mongodb://localhost:27017/turma1").then(() => {
 app.use(bodyParser.json())
 
 
-
 app.put("/input", (req, res) => {
 
-    const aluno = new gradeSchema({
+    const aluno = newStudent('nova' /* a ideia é passar isso aqui na url */ , {
         name: req.body.name,
         firstNote: req.body.firstNote,
         secondNote: req.body.secondNote,
@@ -35,9 +34,7 @@ app.put("/input", (req, res) => {
     }
 })
 
-app.get("/", (req, res) => {
-    res.send("flagpcro")
-})
+
 
 
 app.listen(process.env.PORT, () => {
