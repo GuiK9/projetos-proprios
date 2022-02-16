@@ -1,42 +1,58 @@
-const express = require('express')
-const dotenv = require('dotenv')
-const ModelGrade = require('./mongoModel/ModelGrade.js')
-const mongoose = require('mongoose')
+const express = require("express")
+const dotenv = require("dotenv")
+const gradeSchema = require("./mongoModel/gradeSchema.js")
+const mongoose = require("mongoose")
+const bodyParser = require("body-parser")
 
-
-mongoose.connect('mongodb://localhost:27017/test')
 
 const app = express()
 dotenv.config()
 
+mongoose.connect("mongodb://localhost:27017/turma1").then(() => {
+    console.log("DB connected")
+}).catch(err => console.log(err))
 
-/* app.put('/input', (req, res) => {
 
-    const aluno = new ModelGrade({
-        name: "guilherme",
-        firstNote: 9.1,
-        secondNote: 8.7,
-        thirdNote: 7.1,
-        fourthNote: 9.7,
+app.use(bodyParser.json())
+
+
+
+app.put("/input", (req, res) => {
+
+    const aluno = new gradeSchema({
+        name: req.body.name,
+        firstNote: req.body.firstNote,
+        secondNote: req.body.secondNote,
+        thirdNote: req.body.thirdNote,
+        fourthNote: req.body.fourthNote,
     })
 
-    res.send(aluno)
-}) */
+    try {
+        aluno.save()
+        res.send(aluno)
+    } catch (err) {
+        res.send(err)
+    }
+})
 
-
-app.get('/', (req, res)=> {
-    const aluno = new ModelGrade({
-        name: "guilherme",
-        firstNote: 9.1,
-        secondNote: 8.7,
-        thirdNote: 7.1,
-        fourthNote: 9.7,
-    })
-    console.log(aluno)
-    res.send(aluno)
+app.get("/", (req, res) => {
+    res.send("flagpcro")
 })
 
 
 app.listen(process.env.PORT, () => {
     console.log("rodando")
 })
+
+
+
+
+
+/* const aluno = new gradeSchema({
+    name: "guilherme",
+    firstNote: 9.1,
+    secondNote: 8.7,
+    thirdNote: 7.1,
+    fourthNote: 9.7,
+}) 
+aluno.save()*/

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const studentGrade = mongoose.model('aluno', { 
+const gradeSchema = mongoose.model('aluno', { 
     name: String,
     firstNote: Number,
     secondNote: Number,
@@ -8,4 +8,4 @@ const studentGrade = mongoose.model('aluno', {
     fourthNote: Number,
 })
 
-module.exports = studentGrade
+module.exports = gradeSchema
