@@ -19,15 +19,16 @@ app.use(bodyParser.json())
 app.put("/input/:class", (req, res) => {
 
     const classStudents = req.params.class
+    const body = req.body
 
     const studentGradeModel = mongoose.model(classStudents, studentGradeSchema)
 
     const student = new studentGradeModel({
-        name: req.body.name,
-        firstNote: req.body.firstNote,
-        secondNote: req.body.secondNote,
-        thirdNote: req.body.thirdNote,
-        fourthNote: req.body.fourthNote,
+        name: body.name,
+        firstNote: body.firstNote,
+        secondNote: body.secondNote,
+        thirdNote: body.thirdNote,
+        fourthNote: body.fourthNote,
     })
 
     try {
@@ -38,6 +39,21 @@ app.put("/input/:class", (req, res) => {
     }
 })
 
+
+app.get('/all/:class', async (req, res) => {
+
+    const classStudents = req.params.class
+    const studentGradeModel = mongoose.model(classStudents, studentGradeSchema)
+
+    try {
+        const allDcomuments = await studentGradeModel.find({})
+        console.log(allDcomuments)
+        res.send(allDcomuments)
+    } catch (err) {
+        res.send(err)
+    }
+
+})
 
 
 
