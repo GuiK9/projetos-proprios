@@ -1,8 +1,8 @@
 const express = require("express")
 const dotenv = require("dotenv")
-const newStudent = require("./mongoModel/newStudent.js")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
+const studentGradeSchema = require('./Schemas/studentSchema')
 
 
 const app = express()
@@ -16,9 +16,13 @@ mongoose.connect("mongodb://localhost:27017/school").then(() => {
 app.use(bodyParser.json())
 
 
-app.put("/input", (req, res) => {
+app.put("/input/:class", (req, res) => {
 
-    const aluno = newStudent('nova' /* a ideia é passar isso aqui na url */ , {
+    const classStudents = req.params.class
+
+    const studentGradeModel = mongoose.model(classStudents, studentGradeSchema)
+
+    const student = new studentGradeModel({
         name: req.body.name,
         firstNote: req.body.firstNote,
         secondNote: req.body.secondNote,
@@ -27,8 +31,8 @@ app.put("/input", (req, res) => {
     })
 
     try {
-        aluno.save()
-        res.send(aluno)
+        student.save()
+        res.send(student)
     } catch (err) {
         res.send(err)
     }
