@@ -16,12 +16,17 @@ mongoose.connect("mongodb://localhost:27017/school").then(() => {
 app.use(bodyParser.json())
 
 
+function generateModel(classStudents){
+    return mongoose.model(classStudents, studentGradeSchema)
+
+}
+
+
 app.put("/input/:class", (req, res) => {
 
-    const classStudents = req.params.class
     const body = req.body
 
-    const studentGradeModel = mongoose.model(classStudents, studentGradeSchema)
+    const studentGradeModel = generateModel(req.params.class)
 
     const student = new studentGradeModel({
         name: body.name,
@@ -40,15 +45,32 @@ app.put("/input/:class", (req, res) => {
 })
 
 
-app.get('/all/:class', async (req, res) => {
+app.get("/all/:class", async (req, res) => {
 
-    const classStudents = req.params.class
-    const studentGradeModel = mongoose.model(classStudents, studentGradeSchema)
+    const studentGradeModel = generateModel(req.params.class)
 
     try {
         const allDcomuments = await studentGradeModel.find({})
-        console.log(allDcomuments)
         res.send(allDcomuments)
+    } catch (err) {
+        res.send(err)
+    }
+
+})
+
+app.delete("/delete/:class/:id", async (req, res) => {
+
+    const studentGradeModel = generateModel(req.params.class)
+    const id = req.params.id
+
+    try{
+        const documentToBeDeleted = await studentGradeModel.find({_id:id}).then((documentDeleted)=>{
+            studentGradeModel.deleteOne({_id:id}, (err)=>{
+                if (err) return err
+            })
+            res.send(documentDeleted)
+        })
+        res.send(documentToBeDeleted)
     } catch (err) {
         res.send(err)
     }
@@ -60,16 +82,3 @@ app.get('/all/:class', async (req, res) => {
 app.listen(process.env.PORT, () => {
     console.log("rodando")
 })
-
-
-
-
-
-/* const aluno = new gradeSchema({
-    name: "guilherme",
-    firstNote: 9.1,
-    secondNote: 8.7,
-    thirdNote: 7.1,
-    fourthNote: 9.7,
-}) 
-aluno.save()*/
