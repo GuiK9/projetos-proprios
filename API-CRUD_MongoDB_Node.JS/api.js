@@ -17,7 +17,7 @@ app.use("/", routes)
 
 
 app.listen(process.env.PORT, () => {
-    console.log("rodando")
+    console.log("running")
 })
 
 
