@@ -14,13 +14,8 @@ const newStudent = (req, res) => {
 
     const studentGradeModel = generateModel(req.params.class)
 
-    const student = new studentGradeModel({
-        name: body.name,
-        firstNote: body.firstNote,
-        secondNote: body.secondNote,
-        thirdNote: body.thirdNote,
-        fourthNote: body.fourthNote,
-    })
+    const student = new studentGradeModel({ name, firstNote, secondNote, thirdNote, fourthNote,
+    } = body)
 
     try {
         student.save()
