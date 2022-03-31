@@ -1,0 +1,21 @@
+{
+  "name": "api-crud_postgresql_node",
+  "version": "1.0.0",
+  "description": "RES-API with CRUD functions on postgreSQL ",
+  "main": "src/api.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/api.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongodb": "^3.7.3",
+    "typeorm": "^0.3.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
