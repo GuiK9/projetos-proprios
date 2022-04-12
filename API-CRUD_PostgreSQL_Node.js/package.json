@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.3",
-    "mongodb": "^3.7.3",
     "typeorm": "^0.3.4"
   },
   "devDependencies": {
