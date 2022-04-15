@@ -7,24 +7,14 @@ const routes = require("./src/routes/routes")
 
 dotenv.config()
 
-    const app = express()
+const app = express()
 
-/*     mongoose.connect("mongodb://localhost:27017/school").then(() => {
-        console.log("DB connected")
-    }).catch(err => console.log(err))
-
-
-    app.use("/", routes)
+mongoose.connect("mongodb://localhost:27017/school").then(() => {
+    console.log("DB connected")
+}).catch(err => console.log(err))
 
 
-     app.listen(process.env.PORT, () => {
-        console.log("running")
-    })  */
-
-    app.get('/', (req, res)=> {
-        res.json(msg = {ok:1})
-        console.log(res)
-    })
+app.use("/", routes)
 
 
 module.exports = app.listen(process.env.PORT, () => {
