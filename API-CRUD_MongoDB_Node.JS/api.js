@@ -9,7 +9,7 @@ dotenv.config()
 
 const app = express()
 
-mongoose.connect("mongodb://localhost:27017/school").then(() => {
+mongoose.connect(process.env.MONGO_CONNECTION_URL).then(() => {
     console.log("DB connected")
 }).catch(err => console.log(err))
 

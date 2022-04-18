@@ -41,7 +41,7 @@ describe('API E2E Test Suite', () => {
     test('DELETE /  - Should delete a new student and return it', async () => {
 
         const responseRaw = await superTest(api).get("/all/1b-alunos")
-    
+
         const studentToBeDeleted = JSON.parse(responseRaw.text)[0]
 
 
@@ -61,14 +61,14 @@ describe('API E2E Test Suite', () => {
 
 
         const responseRaw = await superTest(api).get("/all/1b-alunos")
-    
+
         const studentToBeUpdated = JSON.parse(responseRaw.text)[0]
 
 
         const response = await superTest(api).put(`/update/1b-alunos/${studentToBeUpdated._id}`).send({
             fourthNote: 23
         })
-        
+
         const data = JSON.parse(response.text)[0]
 
         expect(data).toEqual(
@@ -78,3 +78,6 @@ describe('API E2E Test Suite', () => {
         );
     })
 })
+
+//escrever um novo teste quando colocar um login com jwt na API 
+//usar joi para validar data de alteração no banco de dados?

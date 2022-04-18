@@ -1,10 +1,21 @@
 
 const studentGradeSchema = require('../Schemas/studentSchema')
+
 const mongoose = require("mongoose")
 
 
 function generateModel(classStudents) {
     return mongoose.model(classStudents, studentGradeSchema)
+}
+
+const register = (req, res) => {
+
+
+
+}
+
+const login = (req, res) => {
+
 }
 
 
@@ -84,4 +95,4 @@ const updateStudent = async (req, res) => {
 }
 
 
-module.exports = { newStudent, allClass, updateStudent, deleteStudent }
+module.exports = { newStudent, allClass, updateStudent, deleteStudent, login, register }
