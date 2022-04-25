@@ -1,6 +1,6 @@
 
 const studentGradeSchema = require('../Schemas/studentSchema')
-
+const { registerJoiSchema, loginJoiSchema } = require('../controlers/authControler')
 const mongoose = require("mongoose")
 
 
@@ -10,7 +10,11 @@ function generateModel(classStudents) {
 
 const register = (req, res) => {
 
+    const body = req.body
 
+    res.send(registerJoiSchema(body))
+
+    //cpf vai pro cadastro do aluno para que ele use de senha padrão para login
 
 }
 
@@ -25,13 +29,24 @@ const newStudent = (req, res) => {
 
     const studentGradeModel = generateModel(req.params.class)
 
-    const student = new studentGradeModel({ name, firstNote, secondNote, thirdNote, fourthNote,
-    } = body)
+
+
 
     try {
+        const student = studentGradeModel.create({
+            name, firstNote, secondNote, thirdNote, fourthNote,
+        } = body, (err) => {
+            if (err) {
+                throw (err)
+                return
+            }
+        })
+
         student.save()
+
         res.send(student)
     } catch (err) {
+        console.log('flag')
         res.send(err)
     }
 }
