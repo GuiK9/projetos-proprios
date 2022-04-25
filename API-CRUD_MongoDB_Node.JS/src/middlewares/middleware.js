@@ -29,24 +29,21 @@ const newStudent = (req, res) => {
 
     const studentGradeModel = generateModel(req.params.class)
 
-
-
-
     try {
-        const student = studentGradeModel.create({
+        const student = new studentGradeModel({
             name, firstNote, secondNote, thirdNote, fourthNote,
-        } = body, (err) => {
+        } = body)
+
+        student.save((err) => {
             if (err) {
-                throw (err)
-                return
+                res.send(err.message)
+            }
+            else {
+                res.send(student)
             }
         })
 
-        student.save()
-
-        res.send(student)
     } catch (err) {
-        console.log('flag')
         res.send(err)
     }
 }
