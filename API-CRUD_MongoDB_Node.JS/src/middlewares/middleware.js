@@ -1,7 +1,11 @@
 
-const studentGradeSchema = require('../Schemas/studentSchema')
+const studentGradeSchema = require('../Schemas/studentGradeSchema')
+const crypto = require('crypto')
+const StudentAccountSchema = require('../Schemas/StudentAccountSchema')
 const { registerJoiSchema, loginJoiSchema } = require('../controlers/authControler')
 const mongoose = require("mongoose")
+
+
 
 
 function generateModel(classStudents) {
@@ -12,14 +16,44 @@ const register = (req, res) => {
 
     const body = req.body
 
-    res.send(registerJoiSchema(body))
+    const dataValidated = registerJoiSchema(body)
 
-    //cpf vai pro cadastro do aluno para que ele use de senha padrão para login
+    if (dataValidated.error != undefined) {
+        res.send(dataValidated.error.message)
+    } else {
+
+        const AccountStudentModel = mongoose.model(process.env.ACCOUNT, StudentAccountSchema)
+
+        var passHash = crypto.createHash(process.env.CODEHASHDB).update(dataValidated.value.password).digest("hex")
+
+        dataValidated.value.password = passHash
+        
+        try {
+            const Account = new AccountStudentModel({ name, cpf, password } = dataValidated.value)
+
+            Account.save((err) => {
+                if (err) {
+                    res.send(err.message)
+                }
+                else {
+                    res.send(Account)
+                }
+            })
+        } catch(err) {
+            res.send(err)
+        }
+
+    }
+
+
 
 }
 
 const login = (req, res) => {
 
+    const body = req.body
+
+    res.send(registerJoiSchema(body))
 }
 
 

@@ -26,6 +26,7 @@ describe('API E2E Test Suite', () => {
             secondNote: 2,
             thirdNote: 2,
             fourthNote: 2,
+            cpf: "12345678901"
         })
 
         const data = JSON.parse(response.text)

@@ -6,6 +6,6 @@ module.exports = mongoose.Schema({
     secondNote: Number,
     thirdNote: Number,
     fourthNote: Number,
-    cpf: {type: Number, required: true}
+    cpf: {type: String, required: true, length:11}
 })
 
