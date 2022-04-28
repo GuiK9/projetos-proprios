@@ -1,16 +1,12 @@
 
-const studentGradeSchema = require('../Schemas/studentGradeSchema')
+const models = require('../models/models')
 const crypto = require('crypto')
-const StudentAccountSchema = require('../Schemas/StudentAccountSchema')
 const { registerJoiSchema, loginJoiSchema } = require('../controlers/authControler')
+
+
+
+const StudentAccountSchema = require('../Schemas/StudentAccountSchema')
 const mongoose = require("mongoose")
-
-
-
-
-function generateModel(classStudents) {
-    return mongoose.model(classStudents, studentGradeSchema)
-}
 
 const register = (req, res) => {
 
@@ -21,15 +17,12 @@ const register = (req, res) => {
     if (dataValidated.error != undefined) {
         res.send(dataValidated.error.message)
     } else {
-
-        const AccountStudentModel = mongoose.model(process.env.ACCOUNT, StudentAccountSchema)
-
         var passHash = crypto.createHash(process.env.CODEHASHDB).update(dataValidated.value.password).digest("hex")
-
         dataValidated.value.password = passHash
-        
+
+
         try {
-            const Account = new AccountStudentModel({ name, cpf, password } = dataValidated.value)
+            const Account = new models.modelAccount({ name, cpf, password } = dataValidated.value)
 
             Account.save((err) => {
                 if (err) {
@@ -39,21 +32,39 @@ const register = (req, res) => {
                     res.send(Account)
                 }
             })
-        } catch(err) {
+        } catch (err) {
             res.send(err)
         }
-
     }
-
-
 
 }
 
-const login = (req, res) => {
+const login = async (req, res) => {
+
 
     const body = req.body
+    const { error } = loginJoiSchema(body)
 
-    res.send(registerJoiSchema(body))
+    if (error) res.send(error.message)
+
+    var passHash = crypto.createHash(process.env.CODEHASHDB).update(body.password).digest("hex")
+    body.password = passHash
+
+    try{
+
+        const AccountModel = mongoose.model(process.env.ACCOUNT, StudentAccountSchema)
+        
+ 
+        const checked = await AccountModel.find({})
+
+        console.log(checked)
+
+        res.send(checked)
+    } catch (err) {
+
+    }
+
+    
 }
 
 
@@ -61,7 +72,7 @@ const newStudent = (req, res) => {
 
     const body = req.body
 
-    const studentGradeModel = generateModel(req.params.class)
+    const studentGradeModel = models.generateStundentGradeModel(req.params.class)
 
     try {
         const student = new studentGradeModel({
@@ -84,7 +95,7 @@ const newStudent = (req, res) => {
 
 const allClass = async (req, res) => {
 
-    const studentGradeModel = generateModel(req.params.class)
+    const studentGradeModel = models.generateStundentGradeModel(req.params.class)
 
     try {
         const allDcomuments = await studentGradeModel.find({})
@@ -97,7 +108,7 @@ const allClass = async (req, res) => {
 
 const deleteStudent = async (req, res) => {
 
-    const studentGradeModel = generateModel(req.params.class)
+    const studentGradeModel = models.generateStundentGradeModel(req.params.class)
     const id = req.params.id
 
     try {
@@ -116,7 +127,7 @@ const deleteStudent = async (req, res) => {
 
 const updateStudent = async (req, res) => {
 
-    const studentGradeModel = generateModel(req.params.class)
+    const studentGradeModel = models.generateStundentGradeModel(req.params.class)
     const id = req.params.id
     const body = req.body
 

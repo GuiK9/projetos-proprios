@@ -14,8 +14,8 @@ const registerJoiSchema = (data) => {
 const loginJoiSchema = (data) => {
 
     const schema = joi.object({
-    cpf: joi.string().min(11).max(11).required(),
-    password: joi.string().min(6).max(26).required()
+    name: joi.string().min(6).max(60).required(),
+    password: joi.string().required()
 })
 
     return schema.validate(data)
