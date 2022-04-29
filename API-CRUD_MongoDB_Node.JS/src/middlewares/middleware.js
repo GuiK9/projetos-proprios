@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 const { registerJoiSchema, loginJoiSchema } = require('../controlers/authControler')
 const models = require('../models/models')
 
@@ -12,7 +13,7 @@ const register = (req, res) => {
     if (dataValidated.error != undefined) {
         res.status(400).send(dataValidated.error.message)
     } else {
-        var passHash = crypto.createHash(process.env.CODEHASHDB).update(dataValidated.value.password).digest("hex")
+        var passHash = crypto.createHash(process.env.CODEALGDB).update(dataValidated.value.password).digest("hex")
         dataValidated.value.password = passHash
 
         try {
@@ -39,17 +40,19 @@ const login = async (req, res) => {
     const { error } = loginJoiSchema(body)
     if (error) { res.status(400).send(error.message) } else {
 
-        var passHash = crypto.createHash(process.env.CODEHASHDB).update(body.password).digest("hex")
-        body.password = passHash
+        var passHash = crypto.createHash(process.env.CODEALGDB).update(body.password).digest("hex")
+        body.password = passHash        
 
         try {
             const AccountModel = models.modelAccount
-            const checked = await AccountModel.find(body)
+            const checkedAccount = await AccountModel.find(body)
 
-            res.send(checked)
+            const token = jwt.sign(JSON.stringify(checkedAccount[0]), process.env.PRIVATEKEYJWT, {algorithm: process.env.CODEALGJWT})
+
+            res.send(token)
         } catch (err) {
             console.log('flag')
-            res.status(500).send(err)
+            res.status(500).send(err.message)
         }
     }
 
@@ -77,8 +80,8 @@ const newStudent = (req, res) => {
         })
 
     } catch (err) {
-        res.status(500).send(err)
-    }
+        res.status(500).send(err.message)
+    } 
 }
 
 const allClass = async (req, res) => {
@@ -89,7 +92,7 @@ const allClass = async (req, res) => {
         const allDcomuments = await studentGradeModel.find({})
         res.send(allDcomuments)
     } catch (err) {
-        res.status(500).send(err)
+        res.status(500).send(err.message)
     }
 
 }
@@ -108,7 +111,7 @@ const deleteStudent = async (req, res) => {
         })
         res.send(documentToBeDeleted)
     } catch (err) {
-        res.status(500).send(err)
+        res.status(500).send(err.message)
     }
 
 }
@@ -134,7 +137,7 @@ const updateStudent = async (req, res) => {
             res.send([stats, newDocument])
         })
     } catch (err) {
-        res.status(500).send(err)
+        res.status(500).send(err.message)
     }
 }
 
