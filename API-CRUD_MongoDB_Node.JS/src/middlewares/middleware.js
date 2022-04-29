@@ -1,12 +1,7 @@
-
-const models = require('../models/models')
 const crypto = require('crypto')
 const { registerJoiSchema, loginJoiSchema } = require('../controlers/authControler')
+const models = require('../models/models')
 
-
-
-const StudentAccountSchema = require('../Schemas/StudentAccountSchema')
-const mongoose = require("mongoose")
 
 const register = (req, res) => {
 
@@ -15,21 +10,20 @@ const register = (req, res) => {
     const dataValidated = registerJoiSchema(body)
 
     if (dataValidated.error != undefined) {
-        res.send(dataValidated.error.message)
+        res.status(400).send(dataValidated.error.message)
     } else {
         var passHash = crypto.createHash(process.env.CODEHASHDB).update(dataValidated.value.password).digest("hex")
         dataValidated.value.password = passHash
 
-
         try {
-            const Account = new models.modelAccount({ name, cpf, password } = dataValidated.value)
+            const AccountModel = new models.modelAccount({ name, cpf, password } = dataValidated.value)
 
-            Account.save((err) => {
+            AccountModel.save((err) => {
                 if (err) {
                     res.send(err.message)
                 }
                 else {
-                    res.send(Account)
+                    res.send(AccountModel)
                 }
             })
         } catch (err) {
@@ -41,30 +35,24 @@ const register = (req, res) => {
 
 const login = async (req, res) => {
 
-
     const body = req.body
     const { error } = loginJoiSchema(body)
+    if (error) { res.status(400).send(error.message) } else {
 
-    if (error) res.send(error.message)
+        var passHash = crypto.createHash(process.env.CODEHASHDB).update(body.password).digest("hex")
+        body.password = passHash
 
-    var passHash = crypto.createHash(process.env.CODEHASHDB).update(body.password).digest("hex")
-    body.password = passHash
+        try {
+            const AccountModel = models.modelAccount
+            const checked = await AccountModel.find(body)
 
-    try{
-
-        const AccountModel = mongoose.model(process.env.ACCOUNT, StudentAccountSchema)
-        
- 
-        const checked = await AccountModel.find({})
-
-        console.log(checked)
-
-        res.send(checked)
-    } catch (err) {
-
+            res.send(checked)
+        } catch (err) {
+            console.log('flag')
+            res.status(500).send(err)
+        }
     }
 
-    
 }
 
 
@@ -89,7 +77,7 @@ const newStudent = (req, res) => {
         })
 
     } catch (err) {
-        res.send(err)
+        res.status(500).send(err)
     }
 }
 
@@ -101,7 +89,7 @@ const allClass = async (req, res) => {
         const allDcomuments = await studentGradeModel.find({})
         res.send(allDcomuments)
     } catch (err) {
-        res.send(err)
+        res.status(500).send(err)
     }
 
 }
@@ -120,7 +108,7 @@ const deleteStudent = async (req, res) => {
         })
         res.send(documentToBeDeleted)
     } catch (err) {
-        res.send(err)
+        res.status(500).send(err)
     }
 
 }
@@ -144,10 +132,9 @@ const updateStudent = async (req, res) => {
         studentGradeModel.updateOne({ _id: id }, newObj).then(async (stats) => {
             const newDocument = await studentGradeModel.findOne({ _id: id })
             res.send([stats, newDocument])
-
         })
     } catch (err) {
-        res.status(400).send(err)
+        res.status(500).send(err)
     }
 }
 
