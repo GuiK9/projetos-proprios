@@ -79,6 +79,3 @@ describe('API E2E Test Suite', () => {
         );
     })
 })
-
-//escrever um novo teste quando colocar um login com jwt na API 
-//usar joi para validar data de alteração no banco de dados?

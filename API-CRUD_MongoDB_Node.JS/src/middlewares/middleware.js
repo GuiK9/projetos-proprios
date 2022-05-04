@@ -41,13 +41,13 @@ const login = async (req, res) => {
     if (error) { res.status(400).send(error.message) } else {
 
         var passHash = crypto.createHash(process.env.CODEALGDB).update(body.password).digest("hex")
-        body.password = passHash        
+        body.password = passHash
 
         try {
             const AccountModel = models.modelAccount
             const checkedAccount = await AccountModel.find(body)
 
-            const token = jwt.sign(JSON.stringify(checkedAccount[0]), process.env.PRIVATEKEYJWT, {algorithm: process.env.CODEALGJWT})
+            const token = jwt.sign(JSON.stringify(checkedAccount[0]), process.env.PRIVATEKEYJWT, { algorithm: process.env.CODEALGJWT })
 
             res.send(token)
         } catch (err) {
@@ -63,25 +63,37 @@ const newStudent = (req, res) => {
 
     const body = req.body
 
-    const studentGradeModel = models.generateStundentGradeModel(req.params.class)
-
     try {
-        const student = new studentGradeModel({
-            name, firstNote, secondNote, thirdNote, fourthNote,
-        } = body)
 
-        student.save((err) => {
-            if (err) {
-                res.send(err.message)
-            }
-            else {
-                res.send(student)
-            }
-        })
+        const jsonJwt = jwt.verify(body.token, process.env.PRIVATEKEYJWT)
+
+        const studentGradeModel = models.generateStundentGradeModel(req.params.class)
+
+        try {
+            const student = new studentGradeModel({
+                name, firstNote, secondNote, thirdNote, fourthNote,
+            } = body)
+
+            student.save((err) => {
+                if (err) {
+                    res.send(err.message)
+                }
+                else {
+                    res.send(student)
+                }
+            })
+
+        } catch (err) {
+            res.status(500).send(err.message)
+        }
 
     } catch (err) {
-        res.status(500).send(err.message)
-    } 
+        res.status(400).send(err.message)
+    }
+
+
+
+
 }
 
 const allClass = async (req, res) => {
