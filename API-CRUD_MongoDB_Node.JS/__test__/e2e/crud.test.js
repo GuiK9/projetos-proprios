@@ -4,8 +4,8 @@ const superTest = require('supertest')
 async function login() {
 
     const response = await superTest(api).post('/login').send({
-        "name": "mateus do sudário",
-        "password": "cabresfbé"
+        "name": "name of some account",
+        "password": "lowbatery"
     })
 
     return response
@@ -18,10 +18,9 @@ describe('API E2E Test Suite', () => {
         const responseLogin = await login()
         const {token} = JSON.parse(responseLogin.text)
 
-        const response = await superTest(api).get('/all/1b-alunos').send({
+        const response = await superTest(api).get('/all/1b-students').send({
             token: token
         })
-
 
         const data = JSON.parse(response.text)
 
@@ -37,7 +36,7 @@ describe('API E2E Test Suite', () => {
         const responseLogin = await login()
         const {token} = JSON.parse(responseLogin.text)
 
-        const response = await superTest(api).post('/input/1b-alunos').send({
+        const response = await superTest(api).post('/input/1b-students').send({
             name: "Baltazar",
             firstNote: 1,
             secondNote: 2,
@@ -62,13 +61,13 @@ describe('API E2E Test Suite', () => {
         const responseLogin = await login()
         const {token} = JSON.parse(responseLogin.text)
 
-        const responseRaw = await superTest(api).get("/all/1b-alunos/").send({
+        const responseRaw = await superTest(api).get("/all/1b-students/").send({
             token: token
         })
 
         const studentToBeDeleted = JSON.parse(responseRaw.text)[0]
 
-        const response = await superTest(api).delete(`/delete/1b-alunos/${studentToBeDeleted._id}`).send({
+        const response = await superTest(api).delete(`/delete/1b-students/${studentToBeDeleted._id}`).send({
             token: token
         })
 
@@ -87,15 +86,13 @@ describe('API E2E Test Suite', () => {
         const {token} = JSON.parse(responseLogin.text)
 
 
-        const responseRaw = await superTest(api).get("/all/1b-alunos/").send({
+        const responseRaw = await superTest(api).get("/all/1b-students/").send({
             token: token
         })
 
-
         const studentToBeUpdated = JSON.parse(responseRaw.text)[0]
 
-
-        const response = await superTest(api).put(`/update/1b-alunos/${studentToBeUpdated._id}`).send({
+        const response = await superTest(api).put(`/update/1b-students/${studentToBeUpdated._id}`).send({
             fourthNote: 23,
             token: token
 
