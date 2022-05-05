@@ -1,5 +1,4 @@
 const crypto = require('crypto')
-const { object } = require('joi')
 const jwt = require('jsonwebtoken')
 const { registerJoiSchema, loginJoiSchema } = require('../controlers/authControler')
 const models = require('../models/models')
@@ -50,7 +49,9 @@ const login = async (req, res) => {
 
             const token = jwt.sign(JSON.stringify(checkedAccount[0]), process.env.PRIVATEKEYJWT, { algorithm: process.env.CODEALGJWT })
 
-            res.send(token)
+            const tokenObj = {token}
+
+            res.send(tokenObj)
         } catch (err) {
             res.status(500).send(err.message)
         }
@@ -149,18 +150,18 @@ const deleteStudent = async (req, res) => {
 
         const documentToBeDeleted = await studentGradeModel.findOne({ _id: id }).then( async (documentDeleted) => {
         
+            const DBresp = await studentGradeModel.deleteOne({ _id: id })
 
-            const test = await studentGradeModel.deleteOne({ _id: id }, (err) => {
-                if (err) return err
-            })
+            if( DBresp.deletedCount ===  0 ){
+                res.status(404).send(JSON.stringify(DBresp))
+                return
+            }
 
-            console.log(test)
-            res.status(500).send(JSON.stringify(test))
+            res.send(documentDeleted)
         })
 
-        res.send(documentToBeDeleted)
     } catch (err) {
-        res.status(500).send(err.message)
+        res.status(500).send(err.message) 
     }
 
 }
@@ -174,7 +175,7 @@ const updateStudent = async (req, res) => {
        
     const jsonJwt = jwt.verify(body.token, process.env.PRIVATEKEYJWT)
     const AccountModel = models.modelAccount
-    const checkedAccount = await AccountModel.findOne(jsonJwt)
+    const checkedAccount = await AccountModel.findOne(jsonJwt) 
 
     if (checkedAccount === null) {
         const err = { message: "you are not registered" }

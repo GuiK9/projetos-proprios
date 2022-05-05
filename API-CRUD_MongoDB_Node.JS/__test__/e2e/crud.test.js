@@ -8,6 +8,7 @@ describe('API E2E Test Suite', () => {
     test('GET / - Should return a class of students', async () => {
 
         const response = await superTest(api).get('/all/1b-alunos')
+       
 
         const data = JSON.parse(response.text)
 
