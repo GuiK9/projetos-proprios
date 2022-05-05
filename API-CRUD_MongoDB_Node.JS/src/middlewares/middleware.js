@@ -51,7 +51,7 @@ const login = async (req, res) => {
 
             const tokenObj = {token}
 
-            res.send(tokenObj)
+            res.send(JSON.stringify(tokenObj))
         } catch (err) {
             res.status(500).send(err.message)
         }
