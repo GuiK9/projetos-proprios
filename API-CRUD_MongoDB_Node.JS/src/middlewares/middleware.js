@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+const { object } = require('joi')
 const jwt = require('jsonwebtoken')
 const { registerJoiSchema, loginJoiSchema } = require('../controlers/authControler')
 const models = require('../models/models')
@@ -51,7 +52,6 @@ const login = async (req, res) => {
 
             res.send(token)
         } catch (err) {
-            console.log('flag')
             res.status(500).send(err.message)
         }
     }
@@ -59,13 +59,20 @@ const login = async (req, res) => {
 }
 
 
-const newStudent = (req, res) => {
+const newStudent = async (req, res) => {
 
     const body = req.body
 
     try {
 
         const jsonJwt = jwt.verify(body.token, process.env.PRIVATEKEYJWT)
+        const AccountModel = models.modelAccount
+        const checkedAccount = await AccountModel.findOne(jsonJwt)
+
+        if (checkedAccount === null) {
+            const err = { message: "you are not registered" }
+            throw err
+        }
 
         const studentGradeModel = models.generateStundentGradeModel(req.params.class)
 
@@ -92,15 +99,25 @@ const newStudent = (req, res) => {
     }
 
 
-
-
 }
 
 const allClass = async (req, res) => {
 
-    const studentGradeModel = models.generateStundentGradeModel(req.params.class)
+
+    const body = req.body
 
     try {
+        const jsonJwt = jwt.verify(body.token, process.env.PRIVATEKEYJWT)
+        const AccountModel = models.modelAccount
+        const checkedAccount = await AccountModel.findOne(jsonJwt)
+
+        if (checkedAccount === null) {
+            const err = { message: "you are not registered" }
+            throw err
+        }
+
+        const studentGradeModel = models.generateStundentGradeModel(req.params.class)
+
         const allDcomuments = await studentGradeModel.find({})
         res.send(allDcomuments)
     } catch (err) {
@@ -111,16 +128,36 @@ const allClass = async (req, res) => {
 
 const deleteStudent = async (req, res) => {
 
-    const studentGradeModel = models.generateStundentGradeModel(req.params.class)
-    const id = req.params.id
+    const body = req.body
 
     try {
-        const documentToBeDeleted = await studentGradeModel.find({ _id: id }).then((documentDeleted) => {
-            studentGradeModel.deleteOne({ _id: id }, (err) => {
+
+        const jsonJwt = jwt.verify(body.token, process.env.PRIVATEKEYJWT)
+        const AccountModel = models.modelAccount
+        const checkedAccount = await AccountModel.findOne(jsonJwt)
+
+        if (checkedAccount === null) {
+            const err = { message: "you are not registered" }
+            throw err
+        }
+
+
+
+        const studentGradeModel = models.generateStundentGradeModel(req.params.class)
+        const id = req.params.id
+
+
+        const documentToBeDeleted = await studentGradeModel.findOne({ _id: id }).then( async (documentDeleted) => {
+        
+
+            const test = await studentGradeModel.deleteOne({ _id: id }, (err) => {
                 if (err) return err
             })
-            res.send(documentDeleted)
+
+            console.log(test)
+            res.status(500).send(JSON.stringify(test))
         })
+
         res.send(documentToBeDeleted)
     } catch (err) {
         res.status(500).send(err.message)
@@ -130,9 +167,24 @@ const deleteStudent = async (req, res) => {
 
 const updateStudent = async (req, res) => {
 
+    const body = req.body
+
+
+   try {
+       
+    const jsonJwt = jwt.verify(body.token, process.env.PRIVATEKEYJWT)
+    const AccountModel = models.modelAccount
+    const checkedAccount = await AccountModel.findOne(jsonJwt)
+
+    if (checkedAccount === null) {
+        const err = { message: "you are not registered" }
+        throw err
+    }
+
+
+
     const studentGradeModel = models.generateStundentGradeModel(req.params.class)
     const id = req.params.id
-    const body = req.body
 
 
     const newObj = {
@@ -143,7 +195,7 @@ const updateStudent = async (req, res) => {
         fourthNote: body.fourthNote,
     }
 
-    try {
+ 
         studentGradeModel.updateOne({ _id: id }, newObj).then(async (stats) => {
             const newDocument = await studentGradeModel.findOne({ _id: id })
             res.send([stats, newDocument])
