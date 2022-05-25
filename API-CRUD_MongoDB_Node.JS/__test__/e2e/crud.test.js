@@ -16,7 +16,7 @@ describe('API E2E Test Suite', () => {
     test('GET / - Should return a class of students', async () => {
 
         const responseLogin = await login()
-        const {token} = JSON.parse(responseLogin.text)
+        const { token } = JSON.parse(responseLogin.text)
 
         const response = await superTest(api).get('/all/1b-students').send({
             token: token
@@ -34,7 +34,7 @@ describe('API E2E Test Suite', () => {
     test('POST /  - Should add a new student and return it', async () => {
 
         const responseLogin = await login()
-        const {token} = JSON.parse(responseLogin.text)
+        const { token } = JSON.parse(responseLogin.text)
 
         const response = await superTest(api).post('/input/1b-students').send({
             name: "Baltazar",
@@ -59,7 +59,7 @@ describe('API E2E Test Suite', () => {
     test('DELETE /  - Should delete a new student and return it', async () => {
 
         const responseLogin = await login()
-        const {token} = JSON.parse(responseLogin.text)
+        const { token } = JSON.parse(responseLogin.text)
 
         const responseRaw = await superTest(api).get("/all/1b-students/").send({
             token: token
@@ -83,7 +83,7 @@ describe('API E2E Test Suite', () => {
     test('PUT /  - Should update a new student and return it', async () => {
 
         const responseLogin = await login()
-        const {token} = JSON.parse(responseLogin.text)
+        const { token } = JSON.parse(responseLogin.text)
 
 
         const responseRaw = await superTest(api).get("/all/1b-students/").send({

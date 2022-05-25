@@ -1,4 +1,2 @@
-API-CRUD_MongoDB_Node.JS/node_modules
 API-CRUD_MongoDB_Node.JS/.env
-Assets-readme
-API-CRUD_PostgreSQL_Node.js/node_modules
+**/node_modules

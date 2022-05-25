@@ -17,13 +17,18 @@ mongoose.connect(process.env.MONGO_CONNECTION_URL).then(() => {
 app.use("/", routes)
 
 
+
+/* 
+    memory usage log
+
+setInterval(() => {
+    const used = process.memoryUsage().heapUsed / 1024 / 1024;
+    console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`)
+    
+}, 10) 
+*/
+
+
 module.exports = app.listen(process.env.PORT, () => {
     console.log("running")
 })
-
-
-
-
-
-
-
