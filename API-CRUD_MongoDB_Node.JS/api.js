@@ -18,15 +18,14 @@ app.use("/", routes)
 
 
 
-/* 
-    memory usage log
+
+//    memory usage log
 
 setInterval(() => {
     const used = process.memoryUsage().heapUsed / 1024 / 1024;
     console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`)
     
-}, 10) 
-*/
+}, 100) 
 
 
 module.exports = app.listen(process.env.PORT, () => {
